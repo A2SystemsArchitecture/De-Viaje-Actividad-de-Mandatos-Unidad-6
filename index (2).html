@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Viaje — Actividad de Mandatos | Spanish 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --parchment: #fdf6e8;
+    --cream: #f5ead0;
+    --gold: #c8902a;
+    --gold-light: #e8b84b;
+    --rust: #b84c2a;
+    --teal: #2a7c74;
+    --teal-light: #3da89d;
+    --shadow: rgba(26,16,8,0.15);
+    --correct: #2d7a3a;
+    --correct-bg: #eaf6ec;
+    --incorrect: #9b2a2a;
+    --incorrect-bg: #fceaea;
+    --partial: #7a5e2d;
+    --partial-bg: #fdf3e0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 0%, rgba(200,144,42,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 100%, rgba(42,124,116,0.07) 0%, transparent 50%);
+  }
+
+  /* ===== SIGN-IN SCREEN ===== */
+  #signin-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .signin-card {
+    background: white;
+    border: 2px solid var(--gold);
+    border-radius: 2px;
+    padding: 3rem 3.5rem;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 8px 8px 0 rgba(200,144,42,0.15), 0 20px 60px var(--shadow);
+    position: relative;
+  }
+
+  .signin-card::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: -8px; bottom: -8px;
+    border: 1px solid rgba(200,144,42,0.3);
+    border-radius: 2px;
+    z-index: -1;
+  }
+
+  .signin-author-badge {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .signin-author-badge .quill {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .signin-author-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--gold);
+    display: block;
+  }
+
+  .signin-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
+
+  .signin-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--teal);
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .signin-intro {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #555;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  .form-group {
+    margin-bottom: 1.4rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #d5c9b0;
+    border-radius: 2px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    background: var(--parchment);
+    color: var(--ink);
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: white;
+  }
+
+  .signin-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+
+  .signin-btn:hover { background: var(--teal-light); }
+  .signin-btn:active { transform: scale(0.99); }
+
+  .signin-resume-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: transparent;
+    color: var(--rust);
+    border: 1.5px solid var(--rust);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    transition: all 0.2s;
+  }
+
+  .signin-resume-btn:hover { background: var(--rust); color: white; }
+
+  .signin-error {
+    color: var(--rust);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    display: none;
+  }
+
+  /* ===== MAIN ACTIVITY ===== */
+  #activity-screen { display: none; }
+
+  .activity-header {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--gold-light);
+  }
+
+  .header-student {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: rgba(253,246,232,0.6);
+    margin-top: 0.2rem;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+  }
+
+  .progress-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(253,246,232,0.6);
+  }
+
+  .progress-bar-outer {
+    width: 160px;
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: var(--gold-light);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .header-btn {
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid rgba(253,246,232,0.4);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--parchment);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .header-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--gold-light); }
+  .header-btn.danger { border-color: rgba(184,76,42,0.6); color: #e8907a; }
+  .header-btn.danger:hover { background: rgba(184,76,42,0.2); border-color: var(--rust); }
+
+  /* ===== MAIN CONTENT ===== */
+  .activity-body {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
+  }
+
+  /* ===== SECTION BLOCK ===== */
+  .section-block {
+    margin-bottom: 3rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1;
+    min-width: 2.5rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .section-number::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  .section-meta {
+    flex: 1;
+  }
+
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.2rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  /* ===== STORY PASSAGE ===== */
+  .story-passage {
+    background: white;
+    border: 1px solid #e0d4b8;
+    border-left: 4px solid var(--gold);
+    border-radius: 2px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.8rem;
+    position: relative;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .story-attribution {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .story-attribution::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.3;
+  }
+
+  .story-text {
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #2a2010;
+  }
+
+  .story-text .vocab-highlight {
+    color: var(--teal);
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  /* ===== QUESTIONS ===== */
+  .question-card {
+    background: white;
+    border: 1px solid #e0d4b8;
+    border-radius: 2px;
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 1px 6px var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+
+  .question-card:hover { box-shadow: 0 3px 16px var(--shadow); }
+
+  .question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .question-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 0.95rem;
+    min-width: 2rem;
+    padding-top: 0.1rem;
+  }
+
+  .question-text {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .question-type-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--cream);
+    color: var(--teal);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    border: 1px solid #d5c9b0;
+  }
+
+  /* Multiple Choice */
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 2.8rem;
+  }
+
+  .mc-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    padding: 0.6rem 0.9rem;
+    border: 1.5px solid #e0d4b8;
+    border-radius: 2px;
+    transition: all 0.15s;
+    font-size: 0.93rem;
+  }
+
+  .mc-option:hover { border-color: var(--teal); background: rgba(42,124,116,0.04); }
+
+  .mc-option input[type="radio"] {
+    accent-color: var(--teal);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .mc-option.selected { border-color: var(--teal); background: rgba(42,124,116,0.06); }
+
+  /* Fill in the blank */
+  .fill-blank-wrap {
+    padding-left: 2.8rem;
+  }
+
+  .fill-blank-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.6rem 0.9rem;
+    border: 1.5px solid #e0d4b8;
+    border-radius: 2px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    background: var(--parchment);
+    transition: border-color 0.2s;
+  }
+
+  .fill-blank-input:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+  }
+
+  .fill-blank-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  /* Command construction */
+  .command-build-wrap {
+    padding-left: 2.8rem;
+  }
+
+  .command-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #e0d4b8;
+    border-radius: 2px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 90px;
+    background: var(--parchment);
+    transition: border-color 0.2s;
+  }
+
+  .command-textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    background: white;
+  }
+
+  .command-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  /* ===== FEEDBACK (shown after submit) ===== */
+  .feedback-badge {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .feedback-badge.correct {
+    background: var(--correct-bg);
+    color: var(--correct);
+    border: 1px solid rgba(45,122,58,0.25);
+  }
+
+  .feedback-badge.incorrect {
+    background: var(--incorrect-bg);
+    color: var(--incorrect);
+    border: 1px solid rgba(155,42,42,0.25);
+  }
+
+  .feedback-badge.partial {
+    background: var(--partial-bg);
+    color: var(--partial);
+    border: 1px solid rgba(122,94,45,0.25);
+  }
+
+  .feedback-badge .feedback-icon {
+    font-size: 1rem;
+  }
+
+  /* ===== SUBMIT / BOTTOM BAR ===== */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 2px solid var(--gold);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    z-index: 99;
+    box-shadow: 0 -4px 20px var(--shadow);
+  }
+
+  .bottom-info {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: #777;
+  }
+
+  .bottom-info strong {
+    color: var(--ink);
+  }
+
+  .submit-btn {
+    padding: 0.85rem 2.5rem;
+    background: var(--rust);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 3px 3px 0 rgba(184,76,42,0.3);
+  }
+
+  .submit-btn:hover { background: #d05a33; transform: translateY(-1px); box-shadow: 3px 5px 0 rgba(184,76,42,0.3); }
+  .submit-btn:disabled { background: #bbb; box-shadow: none; cursor: not-allowed; transform: none; }
+
+  .pause-btn {
+    padding: 0.85rem 1.5rem;
+    background: transparent;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .pause-btn:hover { background: var(--teal); color: white; }
+
+  /* ===== RESULTS SCREEN ===== */
+  #results-screen {
+    display: none;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+
+  .results-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--teal);
+    display: block;
+    line-height: 1;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .results-label {
+    font-family: 'DM Sans', sans-serif;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .results-breakdown {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .result-stat {
+    background: white;
+    border: 1px solid #e0d4b8;
+    padding: 1.2rem;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .result-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    display: block;
+  }
+
+  .result-stat-num.green { color: var(--correct); }
+  .result-stat-num.red { color: var(--incorrect); }
+  .result-stat-num.gray { color: #999; }
+
+  .result-stat-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-top: 0.3rem;
+  }
+
+  .results-message {
+    background: white;
+    border: 1px solid #e0d4b8;
+    border-left: 4px solid var(--gold);
+    padding: 1.5rem 2rem;
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    border-radius: 2px;
+  }
+
+  /* ===== PAUSE MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,16,8,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal-card {
+    background: white;
+    border: 2px solid var(--gold);
+    padding: 2.5rem;
+    max-width: 440px;
+    width: 100%;
+    border-radius: 2px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .modal-body {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-code {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    font-size: 1.4rem;
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1.5px solid #ddd;
+    background: transparent;
+    transition: all 0.2s;
+  }
+
+  .modal-btn.primary { background: var(--teal); color: white; border-color: var(--teal); }
+  .modal-btn.primary:hover { background: var(--teal-light); }
+  .modal-btn:hover { border-color: var(--ink); }
+
+  /* ===== DECORATIVE DIVIDER ===== */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0;
+    color: var(--gold);
+    opacity: 0.5;
+  }
+
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-divider-icon { font-size: 1rem; }
+
+  /* ===== INCOMPLETE WARNING ===== */
+  .incomplete-warning {
+    background: #fffbea;
+    border: 1px solid #f0d060;
+    border-radius: 2px;
+    padding: 1rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #7a6020;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  /* ===== SUBMITTED STATE ===== */
+  .question-card.submitted-correct {
+    border-left: 3px solid var(--correct);
+  }
+
+  .question-card.submitted-incorrect {
+    border-left: 3px solid var(--incorrect);
+  }
+
+  .question-card.submitted-partial {
+    border-left: 3px solid var(--partial);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .signin-card { padding: 2rem 1.5rem; }
+    .activity-body { padding: 1.5rem 1rem 6rem; }
+    .results-breakdown { grid-template-columns: 1fr 1fr; }
+    .bottom-bar { flex-wrap: wrap; }
+    .header-right { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SIGN-IN SCREEN ===== -->
+<div id="signin-screen">
+  <div class="signin-card">
+    <div class="signin-author-badge">
+      <span class="quill">✒️</span>
+      <span class="signin-author-name" id="author-display">Cargando narrador...</span>
+    </div>
+    <h1 class="signin-title">De Viaje</h1>
+    <p class="signin-subtitle">Actividad de Mandatos — Unidad 6</p>
+    <p class="signin-intro" id="signin-quote">
+      "Viajar es descubrir que todos se equivocan sobre otros países."
+    </p>
+
+    <div class="form-group">
+      <label for="input-first">Nombre (First Name)</label>
+      <input type="text" id="input-first" placeholder="Tu nombre..." autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label for="input-last">Apellido (Last Name)</label>
+      <input type="text" id="input-last" placeholder="Tu apellido..." autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label for="input-period">Período (Period)</label>
+      <select id="input-period">
+        <option value="">— Selecciona tu período —</option>
+        <option value="5">Período 5</option>
+        <option value="6">Período 6</option>
+        <option value="7">Período 7</option>
+      </select>
+    </div>
+
+    <p class="signin-error" id="signin-error">Por favor completa todos los campos.</p>
+    <button class="signin-btn" onclick="startActivity()">Comenzar la actividad →</button>
+    <button class="signin-resume-btn" id="resume-btn" onclick="resumeActivity()" style="display:none;">
+      ↩ Continuar sesión guardada
+    </button>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY SCREEN ===== -->
+<div id="activity-screen">
+  <header class="activity-header">
+    <div class="header-left">
+      <span class="header-title">De Viaje — Mandatos</span>
+      <span class="header-student" id="header-student-name">Estudiante</span>
+    </div>
+    <div class="header-right">
+      <div class="progress-wrap">
+        <span class="progress-label" id="progress-label">0 / 22 respondidas</span>
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="progress-bar"></div>
+        </div>
+      </div>
+      <button class="header-btn" onclick="showPauseModal()">⏸ Pausar</button>
+      <button class="header-btn danger" onclick="confirmReset()" id="reset-btn" style="display:none;">↺ Reiniciar</button>
+    </div>
+  </header>
+
+  <main class="activity-body" id="activity-body">
+    <!-- Dynamically rendered -->
+  </main>
+
+  <div class="bottom-bar">
+    <div class="bottom-info">
+      <strong id="answered-count">0</strong> de 22 preguntas respondidas
+    </div>
+    <div style="display:flex;gap:0.75rem;">
+      <button class="pause-btn" onclick="showPauseModal()">⏸ Pausar y guardar</button>
+      <button class="submit-btn" onclick="submitActivity()" id="submit-btn">Entregar actividad ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULTS SCREEN ===== -->
+<div id="results-screen">
+  <div class="results-header">
+    <div class="signin-author-badge">
+      <span class="quill">✒️</span>
+      <span class="signin-author-name" id="results-author"></span>
+    </div>
+    <h1 class="results-title">Resultados — De Viaje</h1>
+    <span class="results-score" id="results-score">—</span>
+    <span class="results-label" id="results-label"></span>
+  </div>
+  <div class="results-breakdown">
+    <div class="result-stat">
+      <span class="result-stat-num green" id="res-correct">0</span>
+      <div class="result-stat-label">Correctas</div>
+    </div>
+    <div class="result-stat">
+      <span class="result-stat-num red" id="res-incorrect">0</span>
+      <div class="result-stat-label">Incorrectas</div>
+    </div>
+    <div class="result-stat">
+      <span class="result-stat-num gray" id="res-partial">0</span>
+      <div class="result-stat-label">Parcialmente correctas</div>
+    </div>
+  </div>
+  <div class="results-message" id="results-message"></div>
+  <p style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:#888;text-align:center;">
+    Esta actividad ha sido enviada. Habla con tu maestro(a) para revisar tus respuestas detalladas.
+  </p>
+</div>
+
+<!-- ===== PAUSE MODAL ===== -->
+<div class="modal-overlay" id="pause-modal">
+  <div class="modal-card">
+    <h2 class="modal-title">⏸ Sesión guardada</h2>
+    <div class="modal-body">
+      Tu progreso ha sido guardado automáticamente en este navegador. Puedes cerrar la página y continuar más tarde.<br><br>
+      Para retomar tu sesión, vuelve a esta página e ingresa tu <strong>mismo nombre, apellido y período</strong>.
+    </div>
+    <button class="modal-btn primary" onclick="closePauseModal()">Entendido — continuar trabajando</button>
+  </div>
+</div>
+
+<!-- ===== CONFIRM SUBMIT MODAL ===== -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-card">
+    <h2 class="modal-title">¿Listo para entregar?</h2>
+    <div class="modal-body" id="confirm-modal-body">
+      Una vez que entregues, no podrás cambiar tus respuestas. ¿Estás seguro(a)?
+    </div>
+    <div class="modal-buttons">
+      <button class="modal-btn" onclick="closeConfirmModal()">Cancelar</button>
+      <button class="modal-btn primary" onclick="finalSubmit()">Sí, entregar ✓</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATA & CONFIG
+// ============================================================
+
+const AUTHORS = [
+  { name: "Gabriel García Márquez", quote: "\"La vida no es la que uno vivió, sino la que uno recuerda y cómo la recuerda para contarla.\"" },
+  { name: "Isabel Allende", quote: "\"Somos lo que hacemos, especialmente lo que hacemos para cambiar lo que somos.\"" },
+  { name: "Mario Vargas Llosa", quote: "\"La literatura es una representación falsificada de la vida que, sin embargo, nos ayuda a entenderla mejor.\"" },
+  { name: "Pablo Neruda", quote: "\"Puedo escribir los versos más tristes esta noche. Pensar que no la tengo, sentir que la he perdido.\"" },
+  { name: "Jorge Luis Borges", quote: "\"El universo, que otros llaman la Biblioteca, se compone de un número indefinido, y tal vez infinito, de galerías hexagonales.\"" },
+  { name: "Octavio Paz", quote: "\"La soledad es el fondo último de la condición humana.\"" },
+  { name: "Julio Cortázar", quote: "\"Hay que tener el valor de ser feliz.\"" },
+  { name: "Laura Esquivel", quote: "\"A través de la comida podemos comunicar lo que sentimos.\"" }
+];
+
+// Pick a random author per session
+let chosenAuthor = AUTHORS[Math.floor(Math.random() * AUTHORS.length)];
+
+// ============================================================
+//  QUESTIONS DATA
+// ============================================================
+// Types: "mc" (multiple choice), "fill" (fill-in-blank), "cmd" (command construction), "creative" (open-ended)
+// For grading: mc/fill have exact answers; cmd/creative are teacher-reviewed (marked as "open")
+
+const SECTIONS = [
+  {
+    number: "I",
+    label: "Interpretación",
+    title: "En la Agencia de Viajes",
+    story: `El señor Martínez entra nervioso a <span class='vocab-highlight'>la agencia de viajes</span>. La <span class='vocab-highlight'>agente de viajes</span>, doña Carmen, lo saluda con una sonrisa. Él necesita comprar un <span class='vocab-highlight'>boleto de ida y vuelta</span> a Madrid, pero no sabe si viajar en <span class='vocab-highlight'>primera clase</span> o en <span class='vocab-highlight'>clase turista</span>. Doña Carmen tiene muchos consejos para él. Le dice: "Señor, <em>revise el horario</em> antes de decidir."`,
+    questions: [
+      {
+        id: "q1", type: "mc",
+        text: "Doña Carmen le dice al señor Martínez: 'Señor, ___ el horario antes de decidir.' ¿Qué forma del mandato formal usa?",
+        options: ["revisa", "revise", "revisas", "revisar"],
+        answer: "revise",
+        hint: "Mandato formal (Ud.) de -ar verb"
+      },
+      {
+        id: "q2", type: "mc",
+        text: "Un amigo le aconseja al señor Martínez: '¡___ en primera clase! Es más cómodo.' ¿Qué forma del mandato informal usarías?",
+        options: ["viaje", "viajes", "viajar", "viaja"],
+        answer: "viaja",
+        hint: "Mandato informal (tú) afirmativo de -ar verb"
+      },
+      {
+        id: "q3", type: "fill",
+        text: "La agente le dice al cliente: '___ el folleto antes de elegir el hotel.' (leer — mandato formal afirmativo)",
+        answer: "lea",
+        hint: "Mandato formal Ud. de 'leer' — recuerda el cambio de vocal"
+      },
+      {
+        id: "q4", type: "mc",
+        text: "El señor Martínez quiere <em>hacer el equipaje</em> mañana. Su esposa le dice: '¡No ___ el autobús!' ¿Qué opción completa correctamente con un mandato informal?",
+        options: ["pierdes", "pierda", "pierdas", "pierdes"],
+        answer: "pierdas",
+        hint: "Mandato informal (tú) negativo — usa el presente subjuntivo"
+      },
+      {
+        id: "q5", type: "fill",
+        text: "Doña Carmen le da un consejo a su cliente: '___ el equipaje de mano en el asiento.' (poner — mandato formal afirmativo)",
+        answer: "ponga",
+        hint: "Mandato formal Ud. — el verbo 'poner' es irregular"
+      },
+      {
+        id: "q6", type: "fill",
+        text: "El hijo del señor Martínez quiere viajar. El padre le dice: '¡___ el pasaporte primero!' (buscar — mandato informal afirmativo)",
+        answer: "busca",
+        hint: "Mandato tú afirmativo de -ar verb. ¡Cuidado con el ortográfico!"
+      },
+      {
+        id: "q7", type: "mc",
+        text: "La tarifa de la primera clase es muy alta. Doña Carmen le dice: 'Señor, no ___ tanto dinero — la clase turista es excelente.' ¿Qué mandato formal usa?",
+        options: ["gaste", "gastes", "gastar", "gasta"],
+        answer: "gaste",
+        hint: "Mandato formal (Ud.) negativo de 'gastar'"
+      }
+    ]
+  },
+  {
+    number: "II",
+    label: "Aplicación",
+    title: "En el Aeropuerto y el Tren",
+    story: `La familia Rodríguez llega al <span class='vocab-highlight'>aeropuerto</span>. El vuelo tiene un <span class='vocab-highlight'>retraso</span> de dos horas. La madre, experta viajera, guía a su familia. Les dice a sus hijos: <em>"Facturad el equipaje ahora mismo."</em> Al padre le dice en voz baja: <em>"Consigue las tarjetas de embarque en el quiosco."</em> En la <span class='vocab-highlight'>estación de tren</span>, el <span class='vocab-highlight'>andén</span> está lleno. El conductor anuncia: <em>"Suban al vagón rápidamente."</em>`,
+    questions: [
+      {
+        id: "q8", type: "fill",
+        text: "En el aeropuerto, el agente le dice al pasajero: '___ la tarjeta de embarque en el quiosco.' (sacar — mandato formal afirmativo)",
+        answer: "saque",
+        hint: "Mandato formal Ud. de 'sacar' — cuidado con el cambio c → qu"
+      },
+      {
+        id: "q9", type: "mc",
+        text: "La madre le dice a su hijo: '¡___ el equipaje de mano debajo del asiento!' (poner — mandato informal afirmativo). ¿Cuál es la forma correcta?",
+        options: ["pone", "pon", "pongas", "ponga"],
+        answer: "pon",
+        hint: "Mandato tú afirmativo de 'poner' — es irregular de una sola sílaba"
+      },
+      {
+        id: "q10", type: "mc",
+        text: "El piloto anuncia: 'Señores pasajeros, no ___ durante el despegue.' (levantarse — mandato formal negativo). ¿Cuál es correcto?",
+        options: ["se levantan", "levántense", "se levanten", "levantarse"],
+        answer: "se levanten",
+        hint: "Mandato Uds. negativo — el pronombre va ANTES del verbo"
+      },
+      {
+        id: "q11", type: "fill",
+        text: "Tu amigo no encontró su pasaporte. Tú le dices: '¡No ___ el pasaporte la próxima vez!' (olvidar — mandato informal negativo)",
+        answer: "olvides",
+        hint: "Mandato tú negativo → presente subjuntivo de 'olvidar'"
+      },
+      {
+        id: "q12", type: "cmd",
+        text: "El avión va a despegar pronto. Escribe DOS mandatos formales (Ud.) lógicos que un auxiliar de vuelo le daría a un pasajero. Usa el vocabulario de la unidad. (Ejemplo: 'Abroche el cinturón de seguridad.')",
+        answer: "open",
+        hint: "Usa verbos como: abrochar, aterrizar, facturar, hacer escala, sentarse, poner, etc."
+      },
+      {
+        id: "q13", type: "mc",
+        text: "En la estación de tren, el conductor dice: '___ al vagón número tres.' (subir — mandato Uds. afirmativo). ¿Cuál es correcto?",
+        options: ["suban", "suba", "subes", "subid"],
+        answer: "suban",
+        hint: "Mandato Uds. afirmativo de 'subir'"
+      },
+      {
+        id: "q14", type: "fill",
+        text: "Tu amiga tiene miedo de perder el tren. Tú le dices: '___ rápido al andén.' (ir — mandato informal afirmativo)",
+        answer: "ve",
+        hint: "Mandato tú afirmativo de 'ir' — es completamente irregular"
+      }
+    ]
+  },
+  {
+    number: "III",
+    label: "Creación",
+    title: "El Hotel, el Coche y el Banco",
+    story: `Después de un largo viaje, los turistas llegan al hotel. La <span class='vocab-highlight'>recepcionista</span> los saluda y les dice: <em>"Dejen las maletas aquí."</em> En la habitación, hay una <span class='vocab-highlight'>almohada</span> extra y <span class='vocab-highlight'>toallas</span> limpias. Al día siguiente, necesitan ir al <span class='vocab-highlight'>cajero automático</span> para <span class='vocab-highlight'>sacar dinero</span> y <span class='vocab-highlight'>cambiar dinero</span> para sus excursiones. El conductor del grupo, nervioso, busca <span class='vocab-highlight'>la gasolinera</span> porque el <span class='vocab-highlight'>tanque de gasolina</span> está casi vacío.`,
+    questions: [
+      {
+        id: "q15", type: "mc",
+        text: "La recepcionista del hotel le dice al huésped: '___ la llave en la recepción antes de salir.' (dejar — mandato formal). ¿Cuál es correcto?",
+        options: ["deja", "deje", "dejas", "dejar"],
+        answer: "deje",
+        hint: "Mandato formal (Ud.) de 'dejar'"
+      },
+      {
+        id: "q16", type: "fill",
+        text: "Tu amigo va a manejar por primera vez. Le dices: '___ el cinturón de seguridad.' (abrochar — mandato informal afirmativo)",
+        answer: "abrocha",
+        hint: "Mandato tú afirmativo de 'abrochar'"
+      },
+      {
+        id: "q17", type: "mc",
+        text: "El instructor de manejo le dice al estudiante: 'No ___ tan rápido por la ciudad.' (manejar — mandato formal negativo)",
+        options: ["maneja", "manejes", "maneje", "manejé"],
+        answer: "maneje",
+        hint: "Mandato formal (Ud.) negativo"
+      },
+      {
+        id: "q18", type: "fill",
+        text: "Tu amiga quiere estacionar en zona prohibida. Le dices: '¡No ___ ahí!' (estacionar — mandato informal negativo)",
+        answer: "estaciones",
+        hint: "Mandato tú negativo → presente subjuntivo de 'estacionar'"
+      },
+      {
+        id: "q19", type: "mc",
+        text: "El empleado del banco le dice al cliente: '___ el cheque aquí, por favor.' (firmar — mandato formal). ¿Cuál es la forma correcta?",
+        options: ["firmas", "firma", "firme", "firmes"],
+        answer: "firme",
+        hint: "Mandato formal Ud. de 'firmar'"
+      },
+      {
+        id: "q20", type: "fill",
+        text: "Tus amigos quieren sacar dinero pero no saben dónde está el cajero. Tú les dices: '___ a la izquierda.' (doblar — mandato Uds. afirmativo)",
+        answer: "doblen",
+        hint: "Mandato Uds. afirmativo de 'doblar'"
+      },
+      {
+        id: "q21", type: "cmd",
+        text: "Imagina que eres el/la guía turístico(a) del grupo. Escribe TRES mandatos — uno formal (Ud.), uno informal (tú), y uno para el grupo (Uds.) — usando el vocabulario del hotel, el banco, o el coche. Sé específico(a) y usa el vocabulario de la unidad.",
+        answer: "open",
+        hint: "Demuestra que dominas las TRES formas. Ejemplo: 'Firme el cheque.' / 'Pon la llave en la recepción.' / 'Cambien el dinero antes de salir.'"
+      },
+      {
+        id: "q22", type: "creative",
+        text: "Escribe 3–5 oraciones en español desde la perspectiva de un(a) viajero(a) que acaba de llegar a Madrid. Incluye por lo menos DOS mandatos (pueden ser pensamientos como '¡Saca el mapa!') y CUATRO palabras de vocabulario de la unidad. ¡Sé creativo(a)!",
+        answer: "open",
+        hint: "Usa vocabulario: la llegada, hacer el equipaje, la habitación sencilla, el cajero automático, facturar el equipaje, etc."
+      }
+    ]
+  }
+];
+
+const TOTAL_QUESTIONS = SECTIONS.reduce((acc, s) => acc + s.questions.length, 0);
+
+// ============================================================
+//  STATE
+// ============================================================
+let state = {
+  studentName: "",
+  period: "",
+  answers: {},       // { qId: value }
+  submitted: false,
+  authorIndex: Math.floor(Math.random() * AUTHORS.length)
+};
+
+let currentAuthor = AUTHORS[state.authorIndex];
+
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('author-display').textContent = currentAuthor.name;
+  document.getElementById('signin-quote').textContent = currentAuthor.quote;
+  checkForSavedSessions();
+});
+
+function getSaveKey(first, last, period) {
+  return `deviaje_${first.toLowerCase()}_${last.toLowerCase()}_p${period}`;
+}
+
+function checkForSavedSessions() {
+  // Check if there's a saved session hint (we store a key of who was last here)
+  const lastSession = localStorage.getItem('deviaje_last');
+  if (lastSession) {
+    try {
+      const info = JSON.parse(lastSession);
+      const key = getSaveKey(info.first, info.last, info.period);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        document.getElementById('resume-btn').style.display = 'block';
+        document.getElementById('input-first').value = info.first;
+        document.getElementById('input-last').value = info.last;
+        document.getElementById('input-period').value = info.period;
+      }
+    } catch(e) {}
+  }
+}
+
+function saveState() {
+  const key = getSaveKey(
+    state.studentName.split(' ')[0] || '',
+    state.studentName.split(' ').slice(1).join(' ') || '',
+    state.period
+  );
+  localStorage.setItem(key, JSON.stringify(state));
+}
+
+function loadState(first, last, period) {
+  const key = getSaveKey(first, last, period);
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    try {
+      state = JSON.parse(saved);
+      return true;
+    } catch(e) {}
+  }
+  return false;
+}
+
+// ============================================================
+//  SIGN-IN
+// ============================================================
+function startActivity() {
+  const first = document.getElementById('input-first').value.trim();
+  const last = document.getElementById('input-last').value.trim();
+  const period = document.getElementById('input-period').value;
+  const errEl = document.getElementById('signin-error');
+
+  if (!first || !last || !period) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Por favor completa todos los campos antes de continuar.';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  // Check for saved state
+  const hasSaved = loadState(first, last, period);
+  if (!hasSaved) {
+    state = {
+      studentName: `${first} ${last}`,
+      period: period,
+      answers: {},
+      submitted: false,
+      authorIndex: state.authorIndex
+    };
+  } else {
+    // Confirm the names match
+    state.studentName = `${first} ${last}`;
+    state.period = period;
+  }
+
+  // Save "last session" hint
+  localStorage.setItem('deviaje_last', JSON.stringify({ first, last, period }));
+
+  currentAuthor = AUTHORS[state.authorIndex];
+  launchActivity();
+}
+
+function resumeActivity() {
+  startActivity();
+}
+
+function launchActivity() {
+  document.getElementById('signin-screen').style.display = 'none';
+  document.getElementById('activity-screen').style.display = 'block';
+  document.getElementById('header-student-name').textContent =
+    `${state.studentName} — Período ${state.period}`;
+
+  if (state.submitted) {
+    showResults();
+    return;
+  }
+
+  renderActivity();
+  updateProgress();
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function renderActivity() {
+  const body = document.getElementById('activity-body');
+  body.innerHTML = '';
+
+  let globalQNum = 0;
+
+  SECTIONS.forEach((section, si) => {
+    const secEl = document.createElement('div');
+    secEl.className = 'section-block';
+
+    // Section header
+    secEl.innerHTML = `
+      <div class="section-header">
+        <div class="section-number">${section.number}</div>
+        <div class="section-meta">
+          <div class="section-label">Sección ${section.number} — ${section.label}</div>
+          <div class="section-title">${section.title}</div>
+        </div>
+      </div>
+      <div class="story-passage">
+        <div class="story-attribution">✒️ ${currentAuthor.name}</div>
+        <p class="story-text">${section.story}</p>
+      </div>
+    `;
+
+    section.questions.forEach((q, qi) => {
+      globalQNum++;
+      const card = buildQuestionCard(q, globalQNum);
+      secEl.appendChild(card);
+    });
+
+    body.appendChild(secEl);
+
+    if (si < SECTIONS.length - 1) {
+      const div = document.createElement('div');
+      div.className = 'section-divider';
+      div.innerHTML = '<span class="section-divider-icon">✦</span>';
+      body.appendChild(div);
+    }
+  });
+
+  // Restore saved answers
+  restoreAnswers();
+}
+
+function buildQuestionCard(q, num) {
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.id = `card-${q.id}`;
+
+  let typeLabel = '';
+  if (q.type === 'mc') typeLabel = 'Opción múltiple';
+  else if (q.type === 'fill') typeLabel = 'Completar';
+  else if (q.type === 'cmd') typeLabel = 'Construir mandatos';
+  else if (q.type === 'creative') typeLabel = 'Escritura creativa';
+
+  card.innerHTML = `
+    <div class="question-header">
+      <span class="question-num">${num}.</span>
+      <span class="question-text">${q.text}</span>
+      <span class="question-type-tag">${typeLabel}</span>
+    </div>
+    <div id="input-area-${q.id}"></div>
+    <div class="fill-blank-hint">${q.hint}</div>
+    <div class="feedback-badge" id="feedback-${q.id}">
+      <span class="feedback-icon"></span>
+      <span class="feedback-text"></span>
+    </div>
+  `;
+
+  const inputArea = card.querySelector(`#input-area-${q.id}`);
+
+  if (q.type === 'mc') {
+    const wrap = document.createElement('div');
+    wrap.className = 'mc-options';
+    q.options.forEach(opt => {
+      const label = document.createElement('label');
+      label.className = 'mc-option';
+      label.innerHTML = `<input type="radio" name="${q.id}" value="${opt}"> ${opt}`;
+      label.querySelector('input').addEventListener('change', () => {
+        wrap.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+        label.classList.add('selected');
+        saveAnswer(q.id, opt);
+      });
+      wrap.appendChild(label);
+    });
+    inputArea.appendChild(wrap);
+
+  } else if (q.type === 'fill') {
+    const wrap = document.createElement('div');
+    wrap.className = 'fill-blank-wrap';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'fill-blank-input';
+    input.placeholder = 'Escribe tu respuesta aquí...';
+    input.addEventListener('input', () => saveAnswer(q.id, input.value));
+    wrap.appendChild(input);
+    inputArea.appendChild(wrap);
+
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'command-build-wrap';
+    const ta = document.createElement('textarea');
+    ta.className = 'command-textarea';
+    ta.placeholder = q.type === 'creative'
+      ? 'Escribe tus oraciones aquí...'
+      : 'Escribe tus mandatos aquí...';
+    ta.addEventListener('input', () => saveAnswer(q.id, ta.value));
+    wrap.appendChild(ta);
+    inputArea.appendChild(wrap);
+  }
+
+  return card;
+}
+
+function restoreAnswers() {
+  Object.entries(state.answers).forEach(([qId, val]) => {
+    // MC
+    const radios = document.querySelectorAll(`input[name="${qId}"]`);
+    radios.forEach(r => {
+      if (r.value === val) {
+        r.checked = true;
+        r.closest('.mc-option').classList.add('selected');
+      }
+    });
+    // Fill
+    const fillInput = document.querySelector(`#input-area-${qId} .fill-blank-input`);
+    if (fillInput) fillInput.value = val;
+    // Textarea
+    const ta = document.querySelector(`#input-area-${qId} .command-textarea`);
+    if (ta) ta.value = val;
+  });
+}
+
+// ============================================================
+//  ANSWER SAVING
+// ============================================================
+function saveAnswer(qId, val) {
+  if (state.submitted) return;
+  state.answers[qId] = val;
+  saveState();
+  updateProgress();
+}
+
+function getAnsweredCount() {
+  let count = 0;
+  SECTIONS.forEach(s => {
+    s.questions.forEach(q => {
+      const val = state.answers[q.id];
+      if (val && val.toString().trim() !== '') count++;
+    });
+  });
+  return count;
+}
+
+function updateProgress() {
+  const answered = getAnsweredCount();
+  document.getElementById('answered-count').textContent = answered;
+  document.getElementById('progress-label').textContent = `${answered} / ${TOTAL_QUESTIONS} respondidas`;
+  const pct = (answered / TOTAL_QUESTIONS) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+// ============================================================
+//  SUBMIT
+// ============================================================
+function submitActivity() {
+  const answered = getAnsweredCount();
+  const total = TOTAL_QUESTIONS;
+
+  if (answered < total) {
+    document.getElementById('confirm-modal-body').innerHTML =
+      `Aún tienes <strong>${total - answered} pregunta(s) sin responder</strong>. Si entregas ahora, las preguntas en blanco se marcarán como incorrectas.<br><br>¿Deseas continuar de todas formas?`;
+  } else {
+    document.getElementById('confirm-modal-body').innerHTML =
+      `Has respondido todas las ${total} preguntas. ¿Estás listo(a) para entregar?`;
+  }
+
+  document.getElementById('confirm-modal').classList.add('active');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirm-modal').classList.remove('active');
+}
+
+function finalSubmit() {
+  closeConfirmModal();
+  state.submitted = true;
+  saveState();
+  gradeAndShowFeedback();
+}
+
+// ============================================================
+//  GRADING
+// ============================================================
+function normalizeAnswer(str) {
+  return str.trim().toLowerCase()
+    .replace(/[áàâä]/g, 'a')
+    .replace(/[éèêë]/g, 'e')
+    .replace(/[íìîï]/g, 'i')
+    .replace(/[óòôö]/g, 'o')
+    .replace(/[úùûü]/g, 'u')
+    .replace(/ñ/g, 'n')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ');
+}
+
+function gradeAndShowFeedback() {
+  let correct = 0, incorrect = 0, partial = 0;
+
+  SECTIONS.forEach(section => {
+    section.questions.forEach(q => {
+      const card = document.getElementById(`card-${q.id}`);
+      const feedbackEl = document.getElementById(`feedback-${q.id}`);
+      const val = (state.answers[q.id] || '').toString().trim();
+
+      // Disable inputs
+      const radios = document.querySelectorAll(`input[name="${q.id}"]`);
+      radios.forEach(r => r.disabled = true);
+      const fillInput = document.querySelector(`#input-area-${q.id} .fill-blank-input`);
+      if (fillInput) fillInput.disabled = true;
+      const ta = document.querySelector(`#input-area-${q.id} .command-textarea`);
+      if (ta) ta.disabled = true;
+
+      feedbackEl.style.display = 'flex';
+
+      if (q.answer === 'open') {
+        // Open-ended — mark as pending teacher review
+        if (val.length > 15) {
+          card.classList.add('submitted-partial');
+          feedbackEl.className = 'feedback-badge partial';
+          feedbackEl.querySelector('.feedback-icon').textContent = '📝';
+          feedbackEl.querySelector('.feedback-text').textContent = 'Respuesta recibida — será evaluada por tu maestro(a).';
+          partial++;
+        } else if (val.length > 0) {
+          card.classList.add('submitted-incorrect');
+          feedbackEl.className = 'feedback-badge incorrect';
+          feedbackEl.querySelector('.feedback-icon').textContent = '⚠️';
+          feedbackEl.querySelector('.feedback-text').textContent = 'Respuesta muy corta. Desarrolla más tu respuesta la próxima vez.';
+          incorrect++;
+        } else {
+          card.classList.add('submitted-incorrect');
+          feedbackEl.className = 'feedback-badge incorrect';
+          feedbackEl.querySelector('.feedback-icon').textContent = '✗';
+          feedbackEl.querySelector('.feedback-text').textContent = 'Sin respuesta.';
+          incorrect++;
+        }
+      } else {
+        // Exact match (with normalization)
+        const normVal = normalizeAnswer(val);
+        const normAns = normalizeAnswer(q.answer);
+        if (normVal === normAns) {
+          card.classList.add('submitted-correct');
+          feedbackEl.className = 'feedback-badge correct';
+          feedbackEl.querySelector('.feedback-icon').textContent = '✓';
+          feedbackEl.querySelector('.feedback-text').textContent = '¡Correcto!';
+          correct++;
+        } else {
+          card.classList.add('submitted-incorrect');
+          feedbackEl.className = 'feedback-badge incorrect';
+          feedbackEl.querySelector('.feedback-icon').textContent = '✗';
+          feedbackEl.querySelector('.feedback-text').textContent = 'Incorrecto.';
+          incorrect++;
+        }
+      }
+    });
+  });
+
+  state.gradingResults = { correct, incorrect, partial };
+  saveState();
+
+  // Update UI
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').textContent = 'Entregado ✓';
+  document.getElementById('reset-btn').style.display = 'inline-block';
+
+  // Show results summary
+  setTimeout(() => showResults(), 1800);
+}
+
+// ============================================================
+//  RESULTS SCREEN
+// ============================================================
+function showResults() {
+  document.getElementById('activity-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+
+  const r = state.gradingResults || { correct: 0, incorrect: 0, partial: 0 };
+  const gradedTotal = TOTAL_QUESTIONS - r.partial;
+  const pct = gradedTotal > 0 ? Math.round((r.correct / gradedTotal) * 100) : 0;
+
+  document.getElementById('results-author').textContent = currentAuthor.name;
+  document.getElementById('results-score').textContent = `${r.correct} / ${TOTAL_QUESTIONS - r.partial}`;
+  document.getElementById('results-label').textContent =
+    `en preguntas calificadas automáticamente (${r.partial} pendiente${r.partial !== 1 ? 's' : ''} de revisión)`;
+  document.getElementById('res-correct').textContent = r.correct;
+  document.getElementById('res-incorrect').textContent = r.incorrect;
+  document.getElementById('res-partial').textContent = r.partial;
+
+  let msg = '';
+  if (pct >= 90) {
+    msg = `<strong>${state.studentName}</strong>, tu dominio de los mandatos es excepcional. Escribir sobre viajes con tanta precisión gramatical es el sello de un(a) verdadero(a) escritor(a) en español. Como diría ${currentAuthor.name}: el lenguaje preciso abre todas las puertas del mundo.`;
+  } else if (pct >= 75) {
+    msg = `<strong>${state.studentName}</strong>, has demostrado una comprensión sólida de los mandatos formales e informales. Algunas formas todavía necesitan práctica, pero tu progreso es claro. ¡Sigue adelante!`;
+  } else if (pct >= 60) {
+    msg = `<strong>${state.studentName}</strong>, estás en buen camino. Los mandatos tienen muchas formas y es natural cometer errores al principio. Revisa las diferencias entre mandatos formales (Ud.) e informales (tú) y la próxima vez brillarás aún más.`;
+  } else {
+    msg = `<strong>${state.studentName}</strong>, los mandatos son un tema desafiante. No te desanimes — cada error es una lección. Revisa con tu maestro(a) las reglas básicas de los mandatos afirmativos y negativos, y vuelve a practicar con confianza.`;
+  }
+
+  document.getElementById('results-message').innerHTML = msg;
+  document.getElementById('results-author').textContent = currentAuthor.name;
+}
+
+// ============================================================
+//  PAUSE / RESUME
+// ============================================================
+function showPauseModal() {
+  saveState();
+  document.getElementById('pause-modal').classList.add('active');
+}
+
+function closePauseModal() {
+  document.getElementById('pause-modal').classList.remove('active');
+}
+
+// ============================================================
+//  RESET (only after submission)
+// ============================================================
+function confirmReset() {
+  if (!confirm('¿Estás seguro(a) de que quieres ver los detalles de tu entrega? Esto te llevará de regreso a la pantalla de resultados.')) return;
+  showResults();
+}
+
+// Close modals on overlay click
+document.getElementById('pause-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePauseModal();
+});
+document.getElementById('confirm-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirmModal();
+});
+</script>
+</body>
+</html>
